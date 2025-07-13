@@ -1,0 +1,17 @@
+shader colour(
+color red = color(0.690, 0.130, 0.094),
+color green = color(0.8, 0.8, 0.235),
+float blend =0,
+
+output color resultRGB = color(0)
+)
+{
+point PP = transform("shader", P);
+float angle = atan2(v,u);
+float mask = abs(noise("perlin", PP*3))*0.1;
+
+float stripe = sin(angle);
+mask +=stripe * 0.02;
+mask = clamp(mask, 0, 1);
+resultRGB = mix(red, green, mask);
+}

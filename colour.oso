@@ -1,0 +1,64 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
+# options: 
+shader colour
+param	color	red	0.689999998 0.129999995 0.0939999968		%read{13,13} %write{2147483647,-1}
+param	color	green	0.800000012 0.800000012 0.234999999		%read{13,13} %write{2147483647,-1}
+param	float	blend	0		%read{2147483647,-1} %write{2147483647,-1}
+oparam	color	resultRGB	0 0 0		%read{2147483647,-1} %write{13,13}
+global	point	P	%read{1,1} %write{2147483647,-1}
+global	float	u	%read{2,2} %write{2147483647,-1}
+global	float	v	%read{2,2} %write{2147483647,-1}
+local	point	PP	%read{3,3} %write{1,1}
+local	float	angle	%read{7,7} %write{2,2}
+local	float	mask	%read{9,13} %write{6,12}
+local	float	stripe	%read{8,8} %write{7,7}
+const	string	$const1	"shader"		%read{1,1} %write{2147483647,-1}
+const	string	$const2	"transform"		%read{0,0} %write{2147483647,-1}
+const	string	$const3	"common"		%read{1,1} %write{2147483647,-1}
+temp	float	$tmp1	%read{6,6} %write{5,5}
+temp	float	$tmp2	%read{5,5} %write{4,4}
+const	string	$const4	"perlin"		%read{4,4} %write{2147483647,-1}
+temp	point	$tmp3	%read{4,4} %write{3,3}
+const	float	$const6	3		%read{3,3} %write{2147483647,-1}
+const	float	$const7	0.100000001		%read{6,6} %write{2147483647,-1}
+const	float	$const8	0.0199999996		%read{8,8} %write{2147483647,-1}
+temp	float	$tmp4	%read{9,9} %write{8,8}
+const	float	$const10	0		%read{12,12} %write{2147483647,-1}
+const	float	$const12	1		%read{11,11} %write{2147483647,-1}
+const	string	$const13	"clamp"		%read{10,10} %write{2147483647,-1}
+temp	float	$tmp5	%read{12,12} %write{11,11}
+code ___main___
+# colour.osl:9
+# point PP = transform("shader", P);
+	functioncall	$const2 2 	%filename{"colour.osl"} %line{9} %argrw{"r"}
+# /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:263
+# point  transform (string to, point p)  { return transform("common",to,p); }
+	transform	PP $const3 $const1 P 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{263} %argrw{"wrrr"}
+# colour.osl:10
+# float angle = atan2(v,u);
+	atan2		angle v u 	%filename{"colour.osl"} %line{10} %argrw{"wrr"}
+# colour.osl:11
+# float mask = abs(noise("perlin", PP*3))*0.1;
+	mul		$tmp3 PP $const6 	%line{11} %argrw{"wrr"}
+	noise		$tmp2 $const4 $tmp3 	%argrw{"wrr"}
+	abs		$tmp1 $tmp2 	%argrw{"wr"}
+	mul		mask $tmp1 $const7 	%argrw{"wrr"}
+# colour.osl:13
+# float stripe = sin(angle);
+	sin		stripe angle 	%line{13} %argrw{"wr"}
+# colour.osl:14
+# mask +=stripe * 0.02;
+	mul		$tmp4 stripe $const8 	%line{14} %argrw{"wrr"}
+	add		mask mask $tmp4 	%argrw{"wrr"}
+# colour.osl:15
+# mask = clamp(mask, 0, 1);
+	functioncall	$const13 13 	%line{15} %argrw{"r"}
+# /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:141
+# float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
+	min		$tmp5 mask $const12 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		mask $tmp5 $const10 	%argrw{"wrr"}
+# colour.osl:16
+# resultRGB = mix(red, green, mask);
+	mix		resultRGB red green mask 	%filename{"colour.osl"} %line{16} %argrw{"wrrr"}
+	end

@@ -1,0 +1,72 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
+# options: 
+shader stem
+param	float	bend	0.200000003		%read{9,9} %write{2147483647,-1}
+param	float	taper	2		%read{15,15} %write{2147483647,-1}
+param	float	y_start	0		%read{3,4} %write{2147483647,-1}
+param	float	y_end	0.200000003		%read{4,4} %write{2147483647,-1}
+oparam	vector	vec	0 0 0		%read{2147483647,-1} %write{14,14}
+oparam	float	radius	0		%read{2147483647,-1} %write{18,18}
+global	point	P	%read{1,1} %write{2147483647,-1}
+local	point	Pp	%read{2,11} %write{1,1}
+local	float	t	%read{9,17} %write{8,8}
+local	float	val	%read{14,14} %write{10,10}
+local	float	noise_val	%read{18,18} %write{13,13}
+const	string	$const1	"object"		%read{1,1} %write{2147483647,-1}
+const	string	$const2	"transform"		%read{0,0} %write{2147483647,-1}
+const	string	$const3	"common"		%read{1,1} %write{2147483647,-1}
+const	int	$const4	2		%read{2,2} %write{2147483647,-1}
+temp	float	$tmp1	%read{3,3} %write{2,2}
+temp	float	$tmp2	%read{5,5} %write{3,3}
+temp	float	$tmp3	%read{5,5} %write{4,4}
+temp	float	$tmp4	%read{7,7} %write{5,5}
+const	float	$const6	0		%read{8,14} %write{2147483647,-1}
+const	float	$const8	1		%read{7,7} %write{2147483647,-1}
+const	string	$const9	"clamp"		%read{6,6} %write{2147483647,-1}
+temp	float	$tmp5	%read{8,8} %write{7,7}
+temp	float	$tmp6	%read{10,10} %write{9,9}
+temp	float	$tmp7	%read{13,13} %write{12,12}
+const	string	$const10	"cell"		%read{12,12} %write{2147483647,-1}
+temp	point	$tmp8	%read{12,12} %write{11,11}
+const	float	$const11	0.00999999978		%read{13,13} %write{2147483647,-1}
+temp	float	$tmp9	%read{16,16} %write{15,15}
+temp	float	$tmp10	%read{17,17} %write{16,16}
+temp	float	$tmp11	%read{18,18} %write{17,17}
+code ___main___
+# stem.osl:11
+# 	point Pp = transform("object", P);
+	functioncall	$const2 2 	%filename{"stem.osl"} %line{11} %argrw{"r"}
+# /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:263
+# point  transform (string to, point p)  { return transform("common",to,p); }
+	transform	Pp $const3 $const1 P 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{263} %argrw{"wrrr"}
+# stem.osl:12
+# 	float t = clamp((Pp[2]-y_start)/(y_end-y_start), 0, 1);
+	compref		$tmp1 Pp $const4 	%filename{"stem.osl"} %line{12} %argrw{"wrr"}
+	sub		$tmp2 $tmp1 y_start 	%argrw{"wrr"}
+	sub		$tmp3 y_end y_start 	%argrw{"wrr"}
+	div		$tmp4 $tmp2 $tmp3 	%argrw{"wrr"}
+	functioncall	$const9 9 	%argrw{"r"}
+# /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:141
+# float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
+	min		$tmp5 $tmp4 $const8 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		t $tmp5 $const6 	%argrw{"wrr"}
+# stem.osl:14
+# 	float val = bend * t * t ;
+	mul		$tmp6 bend t 	%filename{"stem.osl"} %line{14} %argrw{"wrr"}
+	mul		val $tmp6 t 	%argrw{"wrr"}
+# stem.osl:16
+# 	float noise_val = noise("cell", Pp*t) * 0.01;
+	mul		$tmp8 Pp t 	%line{16} %argrw{"wrr"}
+	noise		$tmp7 $const10 $tmp8 	%argrw{"wrr"}
+	mul		noise_val $tmp7 $const11 	%argrw{"wrr"}
+# stem.osl:17
+# 	vec = vector(val, 0.0 , 0.0);
+	vector		vec val $const6 $const6 	%line{17} %argrw{"wrrr"}
+# stem.osl:18
+# 	radius = taper * t * t * t + noise_val;
+	mul		$tmp9 taper t 	%line{18} %argrw{"wrr"}
+	mul		$tmp10 $tmp9 t 	%argrw{"wrr"}
+	mul		$tmp11 $tmp10 t 	%argrw{"wrr"}
+	add		radius $tmp11 noise_val 	%argrw{"wrr"}
+	end

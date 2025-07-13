@@ -1,0 +1,213 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
+# options: 
+shader dent
+param	float	top_depth	0.300000012		%read{9,9} %write{2147483647,-1}
+param	float	bottom_depth	0.300000012		%read{21,21} %write{2147483647,-1}
+param	float	top_height	0.800000012		%read{3,5} %write{2147483647,-1}
+param	float	bottom_height	0.200000003		%read{16,18} %write{2147483647,-1}
+oparam	float	Cout	0		%read{2147483647,-1} %write{66,66}
+oparam	float	shaped	0		%read{61,61} %write{44,44}
+global	point	P	%read{1,1} %write{2147483647,-1}
+global	float	v	%read{3,60} %write{2147483647,-1}
+local	point	PP	%read{6,57} %write{1,1}
+local	float	vec	%read{15,63} %write{2,21}
+local	float	___345_factor	%read{8,8} %write{5,5}
+local	float	___345_asym	%read{10,10} %write{7,7}
+local	float	___347_factor	%read{19,19} %write{18,18}
+local	float	i	%read{26,34} %write{25,34}
+local	float	mag	%read{26,40} %write{22,39}
+local	float	freq	%read{26,34} %write{23,34}
+local	float	angle	%read{48,48} %write{47,47}
+local	float	radial	%read{54,54} %write{53,53}
+local	float	crown_dent	%read{64,64} %write{56,56}
+local	float	lump	%read{65,65} %write{59,59}
+local	float	lump_falloff	%read{65,65} %write{60,60}
+const	string	$const1	"shader"		%read{1,1} %write{2147483647,-1}
+const	string	$const2	"transform"		%read{0,0} %write{2147483647,-1}
+const	string	$const3	"common"		%read{1,1} %write{2147483647,-1}
+const	int	$const4	0		%read{2,46} %write{2147483647,-1}
+temp	int	$tmp1	%read{4,4} %write{3,3}
+const	float	$const6	1		%read{5,55} %write{2147483647,-1}
+const	string	$const7	"perlin"		%read{7,58} %write{2147483647,-1}
+const	float	$const8	3		%read{6,6} %write{2147483647,-1}
+temp	point	$tmp2	%read{7,7} %write{6,6}
+temp	float	$tmp3	%read{9,9} %write{8,8}
+temp	float	$tmp4	%read{12,12} %write{9,9}
+const	float	$const9	0.699999988		%read{11,11} %write{2147483647,-1}
+const	float	$const10	0.600000024		%read{10,10} %write{2147483647,-1}
+temp	float	$tmp5	%read{11,11} %write{10,10}
+temp	float	$tmp6	%read{12,12} %write{11,11}
+const	float	$const11	0.930000007		%read{13,55} %write{2147483647,-1}
+temp	int	$tmp7	%read{14,14} %write{13,13}
+const	float	$const12	0.949999988		%read{15,15} %write{2147483647,-1}
+temp	int	$tmp8	%read{17,17} %write{16,16}
+const	float	$const13	0		%read{18,39} %write{2147483647,-1}
+temp	float	$tmp9	%read{20,20} %write{19,19}
+temp	float	$tmp10	%read{21,21} %write{20,20}
+const	int	$const14	7		%read{23,23} %write{2147483647,-1}
+const	int	$const15	6		%read{26,26} %write{2147483647,-1}
+temp	int	$tmp11	%read{26,34} %write{26,34}
+temp	int	$tmp12	%read{24,34} %write{25,34}
+temp	float	$tmp13	%read{26,34} %write{26,34}
+temp	float	$tmp14	%read{26,34} %write{26,34}
+temp	point	$tmp15	%read{26,34} %write{26,34}
+temp	float	$tmp16	%read{26,34} %write{26,34}
+const	int	$const16	2		%read{45,45} %write{2147483647,-1}
+const	float	$const17	2		%read{33,51} %write{2147483647,-1}
+temp	float	$tmp17	%read{36,36} %write{35,35}
+const	float	$const19	5		%read{35,35} %write{2147483647,-1}
+const	string	$const20	"clamp"		%read{37,37} %write{2147483647,-1}
+temp	float	$tmp18	%read{39,39} %write{38,38}
+temp	float	$tmp19	%read{44,44} %write{43,43}
+temp	float	$tmp20	%read{43,43} %write{42,42}
+const	float	$const21	0.5		%read{40,40} %write{2147483647,-1}
+temp	float	$tmp21	%read{41,41} %write{40,40}
+temp	float	$tmp22	%read{42,42} %write{41,41}
+temp	float	$tmp23	%read{47,47} %write{45,45}
+temp	float	$tmp24	%read{47,47} %write{46,46}
+const	float	$const22	6		%read{48,48} %write{2147483647,-1}
+temp	float	$tmp25	%read{52,52} %write{48,48}
+temp	float	$tmp26	%read{51,51} %write{50,50}
+temp	point	$tmp27	%read{50,50} %write{49,49}
+temp	float	$tmp28	%read{52,52} %write{51,51}
+temp	float	$tmp29	%read{53,53} %write{52,52}
+const	float	$const23	0.0199999996		%read{54,62} %write{2147483647,-1}
+temp	float	$tmp30	%read{56,56} %write{54,54}
+temp	float	$tmp31	%read{56,56} %write{55,55}
+temp	float	$tmp32	%read{59,59} %write{58,58}
+const	float	$const24	4		%read{57,57} %write{2147483647,-1}
+temp	point	$tmp33	%read{58,58} %write{57,57}
+const	float	$const25	0.0299999993		%read{59,59} %write{2147483647,-1}
+const	float	$const26	0.200000003		%read{60,60} %write{2147483647,-1}
+const	float	$const27	0.850000024		%read{60,60} %write{2147483647,-1}
+temp	float	$tmp34	%read{62,62} %write{61,61}
+temp	float	$tmp35	%read{63,63} %write{62,62}
+temp	float	$tmp36	%read{64,64} %write{63,63}
+temp	float	$tmp37	%read{66,66} %write{64,64}
+temp	float	$tmp38	%read{66,66} %write{65,65}
+code ___main___
+# dent.osl:11
+# point PP=transform("shader",P);
+	functioncall	$const2 2 	%filename{"dent.osl"} %line{11} %argrw{"r"}
+# /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:263
+# point  transform (string to, point p)  { return transform("common",to,p); }
+	transform	PP $const3 $const1 P 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{263} %argrw{"wrrr"}
+# dent.osl:12
+# float vec=0;
+	assign		vec $const4 	%filename{"dent.osl"} %line{12} %argrw{"wr"}
+# dent.osl:13
+# if(v > top_height){
+	gt		$tmp1 v top_height 	%line{13} %argrw{"wrr"}
+	if		$tmp1 16 22 	%argrw{"r"}
+# dent.osl:14
+# float factor = smoothstep(top_height, 1, v);
+	smoothstep	___345_factor top_height $const6 v 	%line{14} %argrw{"wrrr"}
+# dent.osl:15
+# float asym = noise("perlin", PP*3.0);
+	mul		$tmp2 PP $const8 	%line{15} %argrw{"wrr"}
+	noise		___345_asym $const7 $tmp2 	%argrw{"wrr"}
+# dent.osl:16
+# vec = -factor * top_depth* (0.7 + 0.6*asym);
+	neg		$tmp3 ___345_factor 	%line{16} %argrw{"wr"}
+	mul		$tmp4 $tmp3 top_depth 	%argrw{"wrr"}
+	mul		$tmp5 $const10 ___345_asym 	%argrw{"wrr"}
+	add		$tmp6 $const9 $tmp5 	%argrw{"wrr"}
+	mul		vec $tmp4 $tmp6 	%argrw{"wrr"}
+# dent.osl:17
+# 	if(v < 0.93){
+	lt		$tmp7 v $const11 	%line{17} %argrw{"wrr"}
+	if		$tmp7 16 16 	%argrw{"r"}
+# dent.osl:18
+# vec = vec*0.95;
+	mul		vec vec $const12 	%line{18} %argrw{"wrr"}
+# dent.osl:21
+# else if(v < bottom_height){
+	lt		$tmp8 v bottom_height 	%line{21} %argrw{"wrr"}
+	if		$tmp8 22 22 	%argrw{"r"}
+# dent.osl:22
+# float factor = smoothstep(0, bottom_height, v);
+	smoothstep	___347_factor $const13 bottom_height v 	%line{22} %argrw{"wrrr"}
+# dent.osl:23
+# vec = -(1 - factor) * bottom_depth;
+	sub		$tmp9 $const6 ___347_factor 	%line{23} %argrw{"wrr"}
+	neg		$tmp10 $tmp9 	%argrw{"wr"}
+	mul		vec $tmp10 bottom_depth 	%argrw{"wrr"}
+# dent.osl:27
+# float mag=0;
+	assign		mag $const4 	%line{27} %argrw{"wr"}
+# dent.osl:28
+# float freq=7 ; //7
+	assign		freq $const14 	%line{28} %argrw{"wr"}
+# dent.osl:29
+# for(i=0;i<6;i+=1){
+	for		$tmp12 26 28 34 35 	%line{29} %argrw{"r"}
+	assign		i $const4 	%argrw{"wr"}
+	lt		$tmp11 i $const15 	%argrw{"wrr"}
+	neq		$tmp12 $tmp11 $const4 	%argrw{"wrr"}
+# dent.osl:30
+# mag+=abs((float)noise("perlin",PP*freq))/freq;
+	mul		$tmp15 PP freq 	%line{30} %argrw{"wrr"}
+	noise		$tmp14 $const7 $tmp15 	%argrw{"wrr"}
+	abs		$tmp13 $tmp14 	%argrw{"wr"}
+	div		$tmp16 $tmp13 freq 	%argrw{"wrr"}
+	add		mag mag $tmp16 	%argrw{"wrr"}
+# dent.osl:31
+# freq*=2;
+	mul		freq freq $const17 	%line{31} %argrw{"wrr"}
+# dent.osl:29
+# for(i=0;i<6;i+=1){
+	add		i i $const6 	%line{29} %argrw{"wrr"}
+# dent.osl:33
+# mag = smoothstep(0, 1, mag*5) ;//5
+	mul		$tmp17 mag $const19 	%line{33} %argrw{"wrr"}
+	smoothstep	mag $const13 $const6 $tmp17 	%argrw{"wrrr"}
+# dent.osl:34
+# mag = clamp(mag, 0, 1);
+	functioncall	$const20 40 	%line{34} %argrw{"r"}
+# /opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h:141
+# float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
+	min		$tmp18 mag $const6 	%filename{"/opt/pixar/RenderManProServer-26.2/lib/osl/include/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		mag $tmp18 $const13 	%argrw{"wrr"}
+# dent.osl:35
+# shaped = 1-pow(abs((mag-0.5)*2), 2);
+	sub		$tmp21 mag $const21 	%filename{"dent.osl"} %line{35} %argrw{"wrr"}
+	mul		$tmp22 $tmp21 $const17 	%argrw{"wrr"}
+	abs		$tmp20 $tmp22 	%argrw{"wr"}
+	pow		$tmp19 $tmp20 $const17 	%argrw{"wrr"}
+	sub		shaped $const6 $tmp19 	%argrw{"wrr"}
+# dent.osl:39
+# float angle = atan2(PP[2], PP[0]);
+	compref		$tmp23 PP $const16 	%line{39} %argrw{"wrr"}
+	compref		$tmp24 PP $const4 	%argrw{"wrr"}
+	atan2		angle $tmp23 $tmp24 	%argrw{"wrr"}
+# dent.osl:40
+# float radial = sin(angle*6.0 + noise("perlin", PP*2.0)*2.0);
+	mul		$tmp25 angle $const22 	%line{40} %argrw{"wrr"}
+	mul		$tmp27 PP $const17 	%argrw{"wrr"}
+	noise		$tmp26 $const7 $tmp27 	%argrw{"wrr"}
+	mul		$tmp28 $tmp26 $const17 	%argrw{"wrr"}
+	add		$tmp29 $tmp25 $tmp28 	%argrw{"wrr"}
+	sin		radial $tmp29 	%argrw{"wr"}
+# dent.osl:41
+# float crown_dent = radial * 0.02 * smoothstep(0.93, 1.0, v);
+	mul		$tmp30 radial $const23 	%line{41} %argrw{"wrr"}
+	smoothstep	$tmp31 $const11 $const6 v 	%argrw{"wrrr"}
+	mul		crown_dent $tmp30 $tmp31 	%argrw{"wrr"}
+# dent.osl:43
+# float lump = noise("perlin", PP*4.0) * 0.03;
+	mul		$tmp33 PP $const24 	%line{43} %argrw{"wrr"}
+	noise		$tmp32 $const7 $tmp33 	%argrw{"wrr"}
+	mul		lump $tmp32 $const25 	%argrw{"wrr"}
+# dent.osl:44
+# float lump_falloff = smoothstep(0.2, 0.85, v);
+	smoothstep	lump_falloff $const26 $const27 v 	%line{44} %argrw{"wrrr"}
+# dent.osl:47
+# Cout= -shaped*0.02+vec-crown_dent+lump*lump_falloff;
+	neg		$tmp34 shaped 	%line{47} %argrw{"wr"}
+	mul		$tmp35 $tmp34 $const23 	%argrw{"wrr"}
+	add		$tmp36 $tmp35 vec 	%argrw{"wrr"}
+	sub		$tmp37 $tmp36 crown_dent 	%argrw{"wrr"}
+	mul		$tmp38 lump lump_falloff 	%argrw{"wrr"}
+	add		Cout $tmp37 $tmp38 	%argrw{"wrr"}
+	end

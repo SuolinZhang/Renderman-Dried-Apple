@@ -1,0 +1,48 @@
+shader dent(
+float top_depth = 0.3,
+float bottom_depth = 0.3,
+float top_height = 0.8,
+float bottom_height = 0.2,
+output float Cout = 0,
+output float shaped = 0
+)
+
+{
+point PP=transform("shader",P);
+float vec=0;
+if(v > top_height){
+float factor = smoothstep(top_height, 1, v);
+float asym = noise("perlin", PP*3.0);
+vec = -factor * top_depth* (0.7 + 0.6*asym);
+	if(v < 0.93){
+vec = vec*0.95;
+}
+}
+else if(v < bottom_height){
+float factor = smoothstep(0, bottom_height, v);
+vec = -(1 - factor) * bottom_depth;
+}
+// Marble shader effect add
+float i;
+float mag=0;
+float freq=7 ; //7
+for(i=0;i<6;i+=1){
+mag+=abs((float)noise("perlin",PP*freq))/freq;
+freq*=2;
+}
+mag = smoothstep(0, 1, mag*5) ;//5
+mag = clamp(mag, 0, 1);
+shaped = 1-pow(abs((mag-0.5)*2), 2);
+//printf("mag=%f", mag);
+
+// Pinch around stem
+float angle = atan2(PP[2], PP[0]);
+float radial = sin(angle*6.0 + noise("perlin", PP*2.0)*2.0);
+float crown_dent = radial * 0.02 * smoothstep(0.93, 1.0, v);
+
+float lump = noise("perlin", PP*4.0) * 0.03;
+float lump_falloff = smoothstep(0.2, 0.85, v);
+
+
+Cout= -shaped*0.02+vec-crown_dent+lump*lump_falloff;
+}

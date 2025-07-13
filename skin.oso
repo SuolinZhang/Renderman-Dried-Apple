@@ -1,0 +1,17 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.13.0.@PROJECT_VERSION_TWEAK@"dev"
+# options: 
+shader skin
+param	float	base_roughness	0.100000001		%read{1,1} %write{2147483647,-1}
+param	float	amp	2		%read{0,0} %write{2147483647,-1}
+param	float	val	0		%read{0,0} %write{2147483647,-1}
+oparam	float	roughness	0		%read{2147483647,-1} %write{1,1}
+oparam	color	edgecolor	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+oparam	color	facecolor	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+temp	float	$tmp1	%read{1,1} %write{0,0}
+code ___main___
+# skin.osl:11
+# roughness = base_roughness + amp*val;
+	mul		$tmp1 amp val 	%filename{"skin.osl"} %line{11} %argrw{"wrr"}
+	add		roughness base_roughness $tmp1 	%argrw{"wrr"}
+	end

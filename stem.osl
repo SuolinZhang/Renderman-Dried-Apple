@@ -1,0 +1,20 @@
+shader stem(
+	float bend = 0.2,
+	float taper = 2.0,
+	float y_start = 0.0,
+	float y_end = 0.2,
+	
+	output vector vec = vector(0), 
+	output float radius = 0
+)
+{
+	point Pp = transform("object", P);
+	float t = clamp((Pp[2]-y_start)/(y_end-y_start), 0, 1);
+
+	float val = bend * t * t ;
+	
+	float noise_val = noise("cell", Pp*t) * 0.01;
+	vec = vector(val, 0.0 , 0.0);
+	radius = taper * t * t * t + noise_val;
+}
+

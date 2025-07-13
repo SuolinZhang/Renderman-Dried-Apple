@@ -1,0 +1,14 @@
+shader skin(
+float base_roughness=0.1,
+float amp = 2.0,
+float val = 0,
+
+output float roughness = 0,
+output color edgecolor = color(0),
+output color facecolor = color(0)
+)
+{
+roughness = base_roughness + amp*val;
+//float face_val = max(0, base_facecolor - amp * val);
+//facecolor = color (face_val);
+}
